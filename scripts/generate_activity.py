@@ -13,10 +13,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import sys
-import urllib.error
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
@@ -24,9 +24,8 @@ USER = "Owsper"
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_OUT = os.path.join(REPO_ROOT, "assets", "activity.svg")
 
-# Monochrome activity levels, dark -> light.
-LEVELS = [(0, 0, "#141414"), (1, 2, "#2b2b2b"), (3, 5, "#4a4a4a"), (6, 10, "#7a7a7a"), (11, 10**9, "#cfcfcf")]
-SERIES = ["#d8d8d8", "#a9a9a9", "#858585", "#6a6a6a", "#545454", "#404040", "#2e2e2e"]
+MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace"
+SERIF = "Georgia, 'Times New Roman', serif"
 
 
 def log(message: str) -> None:
@@ -142,125 +141,116 @@ def load_data(token: str | None) -> tuple[dict[str, int], list[dict]]:
     return contributions, repos
 
 
-def level_for(count: int) -> str:
-    for low, high, color in LEVELS:
-        if low <= count <= high:
-            return color
-    return LEVELS[-1][2]
-
-
-def esc(value: str) -> str:
-    return (
-        value.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-    )
-
-
-def language_mix(repos: list[dict]) -> list[tuple[str, int]]:
-    counts: dict[str, int] = {}
-    for repo in repos:
-        if repo.get("fork"):
-            continue
-        language = repo.get("language") or "Docs only"
-        if language == "Jupyter Notebook":
-            language = "Jupyter"
-        counts[language] = counts.get(language, 0) + 1
-    return sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+def weekly_series(contributions: dict[str, int]) -> tuple[list[tuple[date, int]], date, date]:
+    """Group daily counts into Sunday-starting weeks."""
+    days = sorted(date.fromisoformat(day) for day in contributions)
+    first, last = days[0], days[-1]
+    grid_start = first - timedelta(days=(first.weekday() + 1) % 7)  # Sunday
+    weeks = ((last - grid_start).days // 7) + 1
+    totals: list[tuple[date, int]] = []
+    for week in range(weeks):
+        week_start = grid_start + timedelta(days=week * 7)
+        total = sum(
+            contributions.get((week_start + timedelta(days=offset)).isoformat(), 0)
+            for offset in range(7)
+        )
+        totals.append((week_start, total))
+    return totals, first, last
 
 
 def build_svg(contributions: dict[str, int], repos: list[dict], generated: date) -> str:
     total = sum(contributions.values())
     active_days = sum(1 for count in contributions.values() if count > 0)
     public_repos = [repo for repo in repos if not repo.get("fork")]
-    languages = language_mix(public_repos)
+    series, first, last = weekly_series(contributions)
 
-    days = sorted(date.fromisoformat(day) for day in contributions)
-    first, last = days[0], days[-1]
-    grid_start = first - timedelta(days=(first.weekday() + 1) % 7)  # Sunday
-    weeks = ((last - grid_start).days // 7) + 1
-    pitch = 16 if weeks <= 53 else max(12, 844 // weeks)
-    cell = pitch - 4
-    left, top = 56, 92
-    grid_width = weeks * pitch - (pitch - cell)
-    month_names = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+    left, right = 56, 1144
+    base_y, top_y = 300, 238
+    span = right - left
+    peak = max((count for _, count in series), default=0) or 1
 
-    cells: list[str] = []
-    labels: list[str] = []
-    seen_month = None
-    for week in range(weeks):
-        week_start = grid_start + timedelta(days=week * 7)
-        if week_start.month != seen_month and week_start.day <= 7:
-            seen_month = week_start.month
-            x = left + week * pitch
-            if x + 26 < left + grid_width:
-                labels.append(
-                    f'<text x="{x}" y="{top + 7 * pitch + 12}" font-size="8.5" letter-spacing="1.6" '
-                    f'fill="#5c5c5c">{month_names[week_start.month - 1]}</text>'
-                )
-        for weekday in range(7):
-            day = week_start + timedelta(days=weekday)
-            if day < first or day > last:
-                continue
-            count = contributions.get(day.isoformat(), 0)
-            x = left + week * pitch
-            y = top + weekday * pitch
-            cells.append(
-                f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="1.5" '
-                f'fill="{level_for(count)}"><title>{day.isoformat()} — {count} '
-                f'contribution{"s" if count != 1 else ""}</title></rect>'
-            )
-
-    # Stacked language bar, width proportional to repository count.
-    bar_x, bar_y, bar_w, bar_h = 56, 292, 1088, 6
-    segments: list[str] = []
-    legend: list[str] = []
-    cursor = bar_x
-    total_repos = sum(count for _, count in languages) or 1
-    column = bar_w / max(len(languages), 1)
-    for index, (name, count) in enumerate(languages):
-        width = round(bar_w * count / total_repos)
-        if index == len(languages) - 1:
-            width = bar_x + bar_w - cursor
-        color = SERIES[index % len(SERIES)]
-        segments.append(
-            f'<rect x="{cursor}" y="{bar_y}" width="{max(width - 2, 1)}" height="{bar_h}" fill="{color}"/>'
+    points: list[str] = []
+    bars: list[str] = []
+    dots: list[str] = []
+    step = span / max(len(series) - 1, 1)
+    for index, (_, count) in enumerate(series):
+        x = left + index * step
+        height = round((base_y - top_y) * math.sqrt(count / peak)) if count else 0
+        if height <= 0:
+            color = "#242320"
+            height = 1
+        elif count >= peak * 0.66:
+            color = "#c9c5bc"
+        elif count >= peak * 0.33:
+            color = "#6f6b64"
+        else:
+            color = "#3a3733"
+        bars.append(
+            f'<line x1="{x:.1f}" y1="{base_y}" x2="{x:.1f}" y2="{base_y - height}" '
+            f'stroke="{color}" stroke-width="2.5"/>'
         )
-        lx = bar_x + index * column
-        legend.append(
-            f'<rect x="{lx}" y="318" width="7" height="7" fill="{color}"/>'
-            f'<text x="{lx + 13}" y="325" font-size="9" letter-spacing="1.2" fill="#8a8a8a">'
-            f"{esc(name)} {count}</text>"
+        points.append(f"{x:.1f},{base_y - height}")
+        if count >= peak * 0.8:
+            dots.append(f'<circle cx="{x:.1f}" cy="{base_y - height}" r="2" fill="#f2efe8"/>')
+
+    months: list[str] = []
+    seen: set[int] = set()
+    for index in (0, len(series) // 4, len(series) // 2, (3 * len(series)) // 4):
+        week_start = series[min(index, len(series) - 1)][0]
+        key = week_start.year * 12 + week_start.month
+        if key in seen:
+            continue
+        seen.add(key)
+        x = left + index * step
+        label = week_start.strftime("%b").upper()
+        if index == 0:
+            label = f"{week_start.strftime('%b').upper()} {week_start.year}"
+        months.append(
+            f'<text x="{x:.1f}" y="330" font-size="21" letter-spacing="1.4" fill="#8a857c">{label}</text>'
         )
-        cursor += width
+    months.append(f'<text x="{right}" y="330" text-anchor="end" font-size="21" letter-spacing="1.4" fill="#8a857c">TODAY</text>')
+
+    grid = "".join(
+        f'<line x1="{left}" y1="{y}" x2="{right}" y2="{y}" stroke="#1d1c1a" stroke-width="1"/>'
+        for y in (top_y, 258, 279)
+    )
 
     updated = generated.isoformat()
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="410" viewBox="0 0 1200 410" role="img" aria-labelledby="activityTitle activityDesc">
-  <title id="activityTitle">OWSPER — public GitHub activity</title>
-  <desc id="activityDesc">{total:,} public contributions in the last year across {len(public_repos)} public repositories. Contribution calendar and primary-language distribution generated from the GitHub API.</desc>
-  <rect width="1200" height="410" fill="#080808"/>
-  <rect x="0.5" y="0.5" width="1199" height="409" fill="none" stroke="#1f1f1f"/>
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="activityTitle activityDesc">
+  <title id="activityTitle">OWSPER — public GitHub signal</title>
+  <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} public repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a weekly signal trace.</desc>
+  <rect width="1200" height="360" fill="#070707"/>
+  <rect x="0.5" y="0.5" width="1199" height="359" fill="none" stroke="#232323"/>
 
-  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace">
-    <text x="56" y="52" font-size="10.5" letter-spacing="4" fill="#b4b4b4">SIGNAL / LAST 12 MONTHS</text>
-    <text x="1144" y="52" font-size="9" letter-spacing="2.4" fill="#5a5a5a" text-anchor="end">UPDATED {updated} · GITHUB API</text>
+  <g font-family="{MONO}">
+    <text x="56" y="48" font-size="13" letter-spacing="2.4" fill="#c9c5bc">SIGNAL / LAST 12 MONTHS</text>
+    <text x="1144" y="48" text-anchor="end" font-size="11" letter-spacing="1.6" fill="#9a958b">UPDATED {updated} · GITHUB API</text>
+    <line x1="330" y1="116" x2="330" y2="192" stroke="#242320" stroke-width="1"/>
+    <line x1="642" y1="116" x2="642" y2="192" stroke="#242320" stroke-width="1"/>
+  </g>
 
-    {''.join(cells)}
-    {''.join(labels)}
+  <g font-family="{SERIF}" fill="#f2efe8">
+    <text x="56" y="170" font-size="80" letter-spacing="-1">{total:,}</text>
+    <text x="388" y="170" font-size="80" letter-spacing="-1" fill="#d4d0c6">{active_days}</text>
+    <text x="700" y="170" font-size="80" letter-spacing="-1" fill="#d4d0c6">{len(public_repos)}</text>
+  </g>
 
-    <text x="956" y="124" font-size="46" font-weight="200" letter-spacing="1" fill="#f4f4f4">{total:,}</text>
-    <text x="956" y="144" font-size="8.5" letter-spacing="2.4" fill="#626262">PUBLIC CONTRIBUTIONS</text>
-    <text x="956" y="182" font-size="46" font-weight="200" letter-spacing="1" fill="#cfcfcf">{active_days}</text>
-    <text x="956" y="202" font-size="8.5" letter-spacing="2.4" fill="#626262">ACTIVE DAYS</text>
-    <text x="956" y="240" font-size="10" letter-spacing="2" fill="#8a8a8a">{len(public_repos)} PUBLIC REPOSITORIES</text>
+  <g font-family="{MONO}" font-size="12" letter-spacing="2.2" fill="#9a958b">
+    <text x="56" y="198">PUBLIC CONTRIBUTIONS</text>
+    <text x="388" y="198">ACTIVE DAYS</text>
+    <text x="700" y="198">PUBLIC REPOSITORIES</text>
+  </g>
 
-    <line x1="56" y1="252" x2="1144" y2="252" stroke="#242424" stroke-width="1"/>
-    <text x="56" y="277" font-size="9" letter-spacing="2.4" fill="#626262">PRIMARY LANGUAGE BY REPOSITORY</text>
-    {''.join(segments)}
-    {''.join(legend)}
-    <text x="56" y="382" font-size="8" letter-spacing="1.8" fill="#6a6a6a">GENERATED FROM PUBLIC GITHUB DATA. NO THIRD-PARTY STATISTICS SERVICES.</text>
-    <text x="1144" y="382" font-size="8" letter-spacing="1.8" fill="#6a6a6a" text-anchor="end">OWSPER</text>
+  {grid}
+  <polyline points="{' '.join(points)}" fill="none" stroke="#f2efe8" stroke-width="1.2" opacity="0.32"/>
+  {''.join(bars)}
+  {''.join(dots)}
+  <line x1="{left}" y1="{base_y}" x2="{right}" y2="{base_y}" stroke="#35322d" stroke-width="1"/>
+  {''.join(months)}
+
+  <g font-family="{MONO}" font-size="10" letter-spacing="1.6" fill="#8a857c">
+    <text x="56" y="352">GENERATED FROM PUBLIC GITHUB DATA. NO THIRD-PARTY STATISTICS SERVICES.</text>
+    <text x="1144" y="352" text-anchor="end">OWSPER</text>
   </g>
 </svg>
 '''
