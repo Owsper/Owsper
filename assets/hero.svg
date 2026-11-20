@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="heroTitle heroDesc">
-  <title id="heroTitle">OWSPER — Built to be understood</title>
-  <desc id="heroDesc">An editorial monochrome plate: the word OWSPER at upper left, the line “Built to be understood” set in a serif, and a large machined instrument study at right with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.</desc>
+  <title id="heroTitle">OWSPER — instrument study</title>
+  <desc id="heroDesc">An editorial monochrome plate: the word OWSPER set large at left, and a machined instrument study at right with concentric metal rings, engraved ticks, bolt heads, an optical aperture and a thin signal trace.</desc>
 
   <defs>
     <radialGradient id="field" cx="72%" cy="42%" r="82%">
@@ -146,7 +146,7 @@
   </g>
 
   <!-- wordmark, kept as geometry so it never depends on a font -->
-  <g transform="translate(64 84) scale(0.28) translate(-150 -150)" fill="none" stroke="url(#silver)" stroke-width="5" stroke-linecap="butt" stroke-linejoin="miter">
+  <g transform="translate(64 236) scale(0.6) translate(-150 -150)" fill="none" stroke="url(#silver)" stroke-width="5.5" stroke-linecap="butt" stroke-linejoin="miter">
     <ellipse cx="191" cy="225" rx="41" ry="75"/>
     <path d="M258 150 L280 300 L318 205 L356 300 L378 150"/>
     <path d="M466 172 C456 152 426 148 412 162 C398 176 404 198 422 208 C446 222 462 236 462 258 C462 284 442 300 422 298 C408 296 402 286 402 278"/>
@@ -157,12 +157,8 @@
 
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace">
     <text x="64" y="48" font-size="13" letter-spacing="2.2" fill="#9a958b">PLATE 01 — INSTRUMENT STUDY</text>
-    <line x1="64" y1="206" x2="296" y2="206" stroke="#35322d" stroke-width="1"/>
-    <text x="64" y="238" font-size="12" letter-spacing="2.6" fill="#9a958b">SYSTEMS / PERCEPTION</text>
-  </g>
-
-  <g font-family="Georgia, 'Times New Roman', serif" fill="#f2efe8">
-    <text x="62" y="382" font-size="54" letter-spacing="-0.4">Built to be understood.</text>
+    <line x1="64" y1="356" x2="426" y2="356" stroke="#35322d" stroke-width="1"/>
+    <text x="64" y="386" font-size="12" letter-spacing="2.6" fill="#9a958b">SYSTEMS / PERCEPTION / SIMULATION</text>
   </g>
 
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace">
