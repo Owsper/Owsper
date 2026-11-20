@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="heroTitle heroDesc">
+  <title id="heroTitle">OWSPER — software systems and machine perception</title>
+  <desc id="heroDesc">A monochrome cinematic composition: the word OWSPER in thin geometric letterforms, a silver horizon line, a slowly orbiting aperture and drifting dust on a near-black field.</desc>
+
+  <defs>
+    <radialGradient id="field" cx="80%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#1c1c1c"/>
+      <stop offset="0.48" stop-color="#101010"/>
+      <stop offset="1" stop-color="#080808"/>
+    </radialGradient>
+    <linearGradient id="silver" x1="150" y1="0" x2="754" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4f4f4"/>
+      <stop offset="0.55" stop-color="#cfcfcf"/>
+      <stop offset="1" stop-color="#b0b0b0"/>
+    </linearGradient>
+    <linearGradient id="horizon" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4f4f4" stop-opacity="0"/>
+      <stop offset="0.2" stop-color="#f4f4f4" stop-opacity="0.16"/>
+      <stop offset="0.72" stop-color="#f4f4f4" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#f4f4f4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#e8e8e8" stop-opacity="0.55"/>
+      <stop offset="0.55" stop-color="#bdbdbd" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#080808" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="50%" cy="46%" r="76%">
+      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.72"/>
+    </radialGradient>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <style>
+      .rot-a { transform-box: view-box; transform-origin: 965px 215px; animation: spin 240s linear infinite; }
+      .rot-b { transform-box: view-box; transform-origin: 965px 215px; animation: spin 90s linear infinite reverse; }
+      .dust-a { animation: rise-a 34s ease-in-out infinite alternate; }
+      .dust-b { animation: rise-b 46s ease-in-out infinite alternate; }
+      .sweep-line { animation: sweep 26s linear infinite; }
+      .core-glow { animation: breathe 11s ease-in-out infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes rise-a { from { transform: translateY(6px); } to { transform: translateY(-10px); } }
+      @keyframes rise-b { from { transform: translateY(-8px); } to { transform: translateY(8px); } }
+      @keyframes sweep { from { transform: translateX(0); } to { transform: translateX(1460px); } }
+      @keyframes breathe { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.9; } }
+      @media (prefers-reduced-motion: reduce) {
+        .rot-a, .rot-b, .dust-a, .dust-b, .sweep-line, .core-glow { animation: none !important; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="460" fill="#080808"/>
+  <rect width="1200" height="460" fill="url(#field)"/>
+
+  <g aria-hidden="true">
+    <!-- atmospheric haze behind the aperture -->
+    <circle cx="965" cy="215" r="300" fill="#ffffff" opacity="0.022"/>
+    <circle cx="965" cy="215" r="215" fill="#ffffff" opacity="0.02"/>
+
+    <!-- orbital structure -->
+    <g class="rot-a">
+      <circle cx="965" cy="215" r="244" fill="none" stroke="#2c2c2c" stroke-width="1" stroke-dasharray="1 8"/>
+      <circle cx="965" cy="215" r="205" fill="none" stroke="#6f6f6f" stroke-width="1.4" stroke-dasharray="212 1076" transform="rotate(-58 965 215)"/>
+    </g>
+    <circle cx="965" cy="215" r="205" fill="none" stroke="#242424" stroke-width="1"/>
+    <g class="rot-b">
+      <circle cx="965" cy="215" r="205" fill="none" stroke="#dedede" stroke-width="2" stroke-dasharray="26 1262" transform="rotate(24 965 215)"/>
+    </g>
+
+    <!-- tilted plane for depth -->
+    <ellipse cx="965" cy="215" rx="330" ry="96" fill="none" stroke="#2a2a2a" stroke-width="1" transform="rotate(-24 965 215)"/>
+    <ellipse cx="965" cy="215" rx="330" ry="96" fill="none" stroke="#8f8f8f" stroke-width="0.8" stroke-dasharray="2 13" opacity="0.55" transform="rotate(-24 965 215)"/>
+
+    <!-- aperture core -->
+    <circle cx="965" cy="215" r="52" fill="#070707" stroke="#333333" stroke-width="1"/>
+    <circle cx="965" cy="215" r="52" fill="url(#core)" class="core-glow"/>
+    <circle cx="965" cy="215" r="2.2" fill="#f4f4f4"/>
+    <line x1="965" y1="150" x2="965" y2="280" stroke="#2e2e2e" stroke-width="1"/>
+    <line x1="900" y1="215" x2="1030" y2="215" stroke="#2e2e2e" stroke-width="1"/>
+
+    <!-- horizon -->
+    <line x1="0" y1="392" x2="1200" y2="392" stroke="url(#horizon)" stroke-width="1"/>
+    <g stroke="#5c5c5c" stroke-width="1" opacity="0.55">
+      <line x1="80" y1="392" x2="80" y2="398"/>
+      <line x1="200" y1="392" x2="200" y2="396"/>
+      <line x1="320" y1="392" x2="320" y2="398"/>
+      <line x1="440" y1="392" x2="440" y2="396"/>
+      <line x1="560" y1="392" x2="560" y2="398"/>
+      <line x1="680" y1="392" x2="680" y2="396"/>
+      <line x1="800" y1="392" x2="800" y2="398"/>
+      <line x1="920" y1="392" x2="920" y2="396"/>
+      <line x1="1040" y1="392" x2="1040" y2="398"/>
+      <line x1="1120" y1="392" x2="1120" y2="396"/>
+    </g>
+    <rect class="sweep-line" x="-180" y="391" width="180" height="1.5" fill="url(#sweep)" opacity="0.6"/>
+
+    <!-- drifting dust -->
+    <g class="dust-a" fill="#e8e8e8">
+      <circle cx="96" cy="180" r="0.9" opacity="0.35"/>
+      <circle cx="142" cy="272" r="0.7" opacity="0.22"/>
+      <circle cx="214" cy="126" r="1.1" opacity="0.3"/>
+      <circle cx="268" cy="352" r="0.8" opacity="0.18"/>
+      <circle cx="332" cy="204" r="0.6" opacity="0.3"/>
+      <circle cx="392" cy="96" r="0.9" opacity="0.2"/>
+      <circle cx="456" cy="330" r="0.7" opacity="0.26"/>
+      <circle cx="512" cy="146" r="1.2" opacity="0.18"/>
+      <circle cx="602" cy="248" r="0.6" opacity="0.3"/>
+      <circle cx="668" cy="388" r="0.9" opacity="0.16"/>
+      <circle cx="742" cy="104" r="0.7" opacity="0.22"/>
+      <circle cx="824" cy="322" r="1" opacity="0.2"/>
+      <circle cx="1088" cy="152" r="0.8" opacity="0.28"/>
+      <circle cx="1140" cy="296" r="0.6" opacity="0.2"/>
+      <circle cx="1166" cy="84" r="0.9" opacity="0.16"/>
+    </g>
+    <g class="dust-b" fill="#cfcfcf">
+      <circle cx="66" cy="330" r="0.7" opacity="0.2"/>
+      <circle cx="182" cy="70" r="0.8" opacity="0.18"/>
+      <circle cx="252" cy="238" r="0.6" opacity="0.25"/>
+      <circle cx="356" cy="412" r="0.9" opacity="0.14"/>
+      <circle cx="428" cy="186" r="0.7" opacity="0.2"/>
+      <circle cx="548" cy="386" r="0.8" opacity="0.16"/>
+      <circle cx="632" cy="62" r="0.6" opacity="0.22"/>
+      <circle cx="706" cy="286" r="0.9" opacity="0.18"/>
+      <circle cx="788" cy="418" r="0.7" opacity="0.12"/>
+      <circle cx="876" cy="64" r="0.8" opacity="0.2"/>
+      <circle cx="1012" cy="352" r="0.6" opacity="0.18"/>
+      <circle cx="1104" cy="222" r="0.9" opacity="0.24"/>
+      <circle cx="1174" cy="386" r="0.7" opacity="0.14"/>
+    </g>
+  </g>
+
+  <!-- wordmark, drawn as geometry so it never depends on a font -->
+  <g fill="none" stroke="url(#silver)" stroke-width="3.2" stroke-linecap="butt" stroke-linejoin="miter">
+    <ellipse cx="191" cy="225" rx="41" ry="75"/>
+    <path d="M258 150 L280 300 L318 205 L356 300 L378 150"/>
+    <path d="M466 172 C456 152 426 148 412 162 C398 176 404 198 422 208 C446 222 462 236 462 258 C462 284 442 300 422 298 C408 296 402 286 402 278"/>
+    <path d="M496 300 L496 150 M496 152 L534 152 C568 152 568 216 534 216 L496 216"/>
+    <path d="M654 150 L592 150 L592 300 L654 300 M592 225 L640 225"/>
+    <path d="M680 300 L680 150 M680 152 L716 152 C748 152 748 214 716 214 L680 214 M714 214 L754 300"/>
+  </g>
+
+  <g fill="#a3a3a3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace" aria-hidden="true">
+    <line x1="152" y1="330" x2="196" y2="330" stroke="#6f6f6f" stroke-width="1"/>
+    <text x="152" y="358" font-size="12" letter-spacing="4.4" fill="#c4c4c4">SOFTWARE · SYSTEMS · MACHINE PERCEPTION</text>
+    <text x="152" y="381" font-size="10.5" letter-spacing="3.6" fill="#7f7f7f">PUBLIC WORK / EST. 2022</text>
+    <text x="1144" y="434" font-size="10.5" letter-spacing="3" fill="#757575" text-anchor="end">GITHUB.COM/OWSPER</text>
+  </g>
+
+  <rect width="1200" height="460" fill="url(#vignette)"/>
+  <rect width="1200" height="460" filter="url(#grain)" opacity="0.05"/>
+</svg>

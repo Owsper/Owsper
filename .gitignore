@@ -1,0 +1,4 @@
+# Local research and QA workspace
+.research/
+__pycache__/
+*.pyc
