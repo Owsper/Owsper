@@ -1,112 +1,82 @@
 <p align="center">
-  <img src="assets/hero.svg" width="1200" alt="OWSPER — thin geometric wordmark above a silver horizon, with a slowly orbiting aperture on a near-black field">
+  <img src="assets/hero.svg" width="1200" alt="Editorial monochrome plate. The word OWSPER at upper left, the headline “Between the code and the world” set in a serif, and a large machined instrument study with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.">
 </p>
 
 <p align="center">
-  Local-first tools, applied machine learning, and interfaces that show their work.
+  Local-first tools, simulation and machine perception — built with the reasoning left visible.
 </p>
 
 <p align="center">
-  <sub><a href="#selected-work">WORK</a> &nbsp;·&nbsp; <a href="#repository-index">INDEX</a> &nbsp;·&nbsp; <a href="#technology">STACK</a> &nbsp;·&nbsp; <a href="#activity">ACTIVITY</a> &nbsp;·&nbsp; <a href="https://github.com/Owsper">GITHUB</a></sub>
+  <sub><a href="#selected-systems">WORK</a> &nbsp;·&nbsp; <a href="#index">INDEX</a> &nbsp;·&nbsp; <a href="#bench">BENCH</a> &nbsp;·&nbsp; <a href="#signal">SIGNAL</a> &nbsp;·&nbsp; <a href="https://github.com/Owsper">GITHUB</a></sub>
 </p>
 
 ---
 
-## ABOUT
+> **Direction.** Most of what is public here is software: local-first tools, simulation, machine perception. The layer I keep moving toward is underneath it — firmware, sensors, and code that has to answer to a physical system. That work is not public yet.
 
-I build complete systems rather than isolated demos: a local-first job-search and CV workspace, an AI interview rehearsal app, an explainable object classifier, and a client/server management product.
+<a name="selected-systems"></a>
+## 01 / Selected systems
 
-The work across this account moves between Python and TypeScript services, Flask and FastAPI backends, React and Streamlit interfaces, PyTorch computer vision, and — further out — Unity and Minecraft modding. Everything below is drawn from the public repositories. Nothing is a skill rating.
+Three projects, chosen for what they show about how I build: a product with operational weight, a tool with an evidence trail, and a simulation where the physics has to hold.
 
-## SELECTED WORK
+### 01 · [Vera](https://github.com/Owsper/vera-church-management-system-showcase)
 
-Four repositories carry the deepest engineering. The other six stay reachable in the [index](#repository-index).
+**Operations software for a parish, built end to end.**
 
-### 01 · [Alpine](https://github.com/Owsper/Alpine)
-
-**Rehearse the interview. Then just show up.**
-
-Paste a job post, review company facts with linked sources, take a spoken interview, and get six scores that quote your own answers — then a next session aimed at your weakest dimensions.
-
-<sub>`React 19` · `Vite 8` · `TypeScript / Hono` · `FastAPI` · `Whisper` · `Kokoro ONNX` · `Supabase`</sub>
-
-<sub>MVP · [Repository](https://github.com/Owsper/Alpine) · [Promo, 0:41](https://cdn.jsdelivr.net/gh/Owsper/Alpine@main/video/out/alpine-promo.mp4) · [Product demo, 1:26](https://cdn.jsdelivr.net/gh/Owsper/Alpine@main/video/out/alpine-demo.mp4)</sub>
-
-### 02 · [CONSUL](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)
-
-**A job search where every claim is traceable to evidence.**
-
-A local-first Streamlit workspace for job discovery, matching and application tracking. Thirteen source connectors feed a scored shortlist; generated CVs may only use facts from an approved Ground Truth ledger.
-
-<sub>`Python` · `Streamlit` · `SQLAlchemy` · `SQLite` · `Gemini / OpenAI-compatible`</sub>
-
-<sub>Local-only data · 13 connectors · 117 mocked tests · [Repository](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)</sub>
-
-### 03 · [Vera](https://github.com/Owsper/vera-church-management-system-showcase)
-
-**A church, run from one system.**
-
-A private client–server product for members and families, donations, accounting, budgets, events and reports. Designed, built and tested end to end; the repository is the public showcase of the decisions and interface.
+A desktop client and a server for the daily work of a church: members and families, donations, accounting, budgets, events and reports. Designed, built and tested as one system; the source is private, and the public repository records the architecture, data model and product decisions.
 
 <sub>`Python` · `PySide6` · `FastAPI` · `PostgreSQL` · `JWT`</sub>
 
-<sub>Source private · [Showcase repository](https://github.com/Owsper/vera-church-management-system-showcase)</sub>
+<sub>Completed private product · [Case study](https://github.com/Owsper/vera-church-management-system-showcase)</sub>
 
-### 04 · [Assistive Object Classifier](https://github.com/Owsper/Assistive-Object-Classifier)
+### 02 · [CONSUL](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)
 
-**Fifteen everyday objects, and a model that explains itself.**
+**A job search that treats every claim as a claim.**
 
-An image classifier for assistive contexts, comparing a custom CNN, EfficientNetV2-S and ConvNeXt-Tiny across 15 household classes, with Grad-CAM and SHAP visualisations and a Gradio interface.
+A local-first workspace for job discovery, matching and application tracking. Thirteen source connectors feed a scored shortlist; generated documents may only use facts from an approved Ground Truth ledger the generator cannot bypass.
 
-<sub>`PyTorch` · `ConvNeXt-Tiny` · `Grad-CAM` · `SHAP` · `Gradio`</sub>
+<sub>`Python` · `Streamlit` · `SQLAlchemy` · `SQLite` · `Gemini / OpenAI-compatible`</sub>
 
-<sub>Research prototype · [Repository](https://github.com/Owsper/Assistive-Object-Classifier) · [Live demo](https://huggingface.co/spaces/owsper/assistive-object-classifier)</sub>
+<sub>Active · Local-only data · 13 connectors · 117 mocked tests · [Repository](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)</sub>
 
-Also carrying weight: **[IDMS](https://github.com/Owsper/IDMS)**, a 202-commit Flask/SQLite platform for members, documents, meetings, finance and voting, and **[WW2-Dogfight](https://github.com/Owsper/WW2-Dogfight)**, a Unity 6 HDRP dogfight scene.
+### 03 · [WW2-Dogfight](https://github.com/Owsper/WW2-Dogfight)
 
-## REPOSITORY INDEX
+**Flight, modelled as force.**
 
-All ten public repositories, grouped by what they are.
+An in-progress Unity 6 HDRP prototype: a Bf 109 over sculpted terrain, rebuilt Input System controls and rigidbody thrust. Small and early — built to test how force, camera and terrain behave together.
 
-#### Applied AI & perception
+<sub>`Unity 6000.5.9f1` · `HDRP 17.5` · `C# / HLSL`</sub>
 
-**[Alpine](https://github.com/Owsper/Alpine)** — AI interview rehearsal with sourced company facts, spoken sessions and quote-backed scoring.
-<sub>`TypeScript` · `React` · `FastAPI` · MVP</sub>
+<sub>Early prototype · [Repository](https://github.com/Owsper/WW2-Dogfight)</sub>
 
-**[Assistive-Object-Classifier](https://github.com/Owsper/Assistive-Object-Classifier)** — Explainable 15-class object classifier with a deployed Gradio demo.
-<sub>`Python` · `PyTorch` · `Gradio`</sub>
+<a name="index"></a>
+## 02 / Index
 
-**[rimes-ocr-benchmark](https://github.com/Owsper/rimes-ocr-benchmark)** — CPU-only benchmark of four OCR engines on 100 French handwriting lines; PaddleOCR leads at 15.43% CER.
-<sub>`Python` · `PaddleOCR` · `Tesseract` · `TrOCR` · `EasyOCR`</sub>
+Ten project repositories, plus this profile. Grouped by what they are; the featured three are above.
 
-**[MINT](https://github.com/Owsper/MINT)** — Early scaffold for paper evaluation and handwriting detection; the repository currently holds the description and a placeholder entry point.
-<sub>`Python` · early</sub>
+**Product systems**
 
-#### Product & platform systems
+- **[Vera](https://github.com/Owsper/vera-church-management-system-showcase)** — Parish operations; private client/server, public case study. <sub>`Python` · `PySide6` · `FastAPI` · `PostgreSQL`</sub>
+- **[CONSUL](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)** — Local-first job discovery, evidence-backed tailoring and application tracking. <sub>`Python` · `Streamlit` · `SQLite`</sub>
+- **[IDMS](https://github.com/Owsper/IDMS)** — Members, documents, meetings, finance and voting; 202 commits and a broad test suite. <sub>`Flask` · `SQLite`</sub>
+- **[Alpine](https://github.com/Owsper/Alpine)** — Interview rehearsal with sourced company facts and quote-backed scoring. <sub>`React 19` · `Hono` · `FastAPI` · `Whisper`</sub>
 
-**[Consul-Formerly-HireMeQuackers](https://github.com/Owsper/Consul-Formerly-HireMeQuackers)** — Local-first job discovery, evidence-backed CV tailoring and application tracking.
-<sub>`Python` · `Streamlit` · `SQLite`</sub>
+**Perception**
 
-**[vera-church-management-system-showcase](https://github.com/Owsper/vera-church-management-system-showcase)** — Public showcase of a private PySide6 / FastAPI / PostgreSQL management product.
-<sub>`Docs` · `Screenshots` · private source</sub>
+- **[Assistive Object Classifier](https://github.com/Owsper/Assistive-Object-Classifier)** — Fifteen household classes; custom CNN, EfficientNetV2 and ConvNeXt compared, with Grad-CAM and SHAP. <sub>`PyTorch` · `Gradio` · [live demo](https://huggingface.co/spaces/owsper/assistive-object-classifier)</sub>
+- **[rimes-ocr-benchmark](https://github.com/Owsper/rimes-ocr-benchmark)** — Four OCR engines on 100 French handwriting lines; PaddleOCR leads at 15.43% CER. <sub>`PaddleOCR` · `Tesseract` · `TrOCR` · `EasyOCR`</sub>
+- **[MINT](https://github.com/Owsper/MINT)** — Early scaffold for paper evaluation and handwriting detection; the entry point is still a placeholder. <sub>`Python` · early</sub>
 
-**[IDMS](https://github.com/Owsper/IDMS)** — Flask and SQLite platform for members, documents, teams, meetings, finance and voting, with server-rendered HTML pages and a broad test suite.
-<sub>`Python` · `Flask` · `SQLite` · `HTML`</sub>
+**Interactive**
 
-#### Interactive & simulation
+- **[WW2-Dogfight](https://github.com/Owsper/WW2-Dogfight)** — Unity 6 HDRP dogfight scene; terrain, Input System and rigidbody-driven flight. <sub>`C# / HLSL` · `Unity`</sub>
+- **[Minom](https://github.com/Owsper/Minom)** — Fabric mod for Minecraft 1.19.2; the first shipped block is `minom:wet_sand`. <sub>`Java` · `Fabric`</sub>
+- **[Barthelomew](https://github.com/Owsper/Barthelomew)** — Manifest V3 browser extension that spawns a teddy bear on the current page. <sub>`JavaScript` · `MIT`</sub>
 
-**[WW2-Dogfight](https://github.com/Owsper/WW2-Dogfight)** — Unity 6 HDRP dogfight scene with terrain, input system and rigidbody-driven flight.
-<sub>`C# / HLSL` · `Unity` · `HDRP`</sub>
+<a name="bench"></a>
+## 03 / Bench
 
-**[Minom](https://github.com/Owsper/Minom)** — Fabric mod for Minecraft 1.19.2 on Java 17; the first shipped block is `minom:wet_sand`.
-<sub>`Java` · `Fabric`</sub>
-
-**[Barthelomew](https://github.com/Owsper/Barthelomew)** — Manifest V3 browser extension that spawns a teddy bear on the current page.
-<sub>`JavaScript` · `CSS` · `MIT`</sub>
-
-## TECHNOLOGY
-
-Only tools and languages that appear in the repositories above.
+Tools that appear in the repositories above. An inventory, not a proficiency scale.
 
 **Languages** — `Python` `TypeScript` `JavaScript` `Java` `C# / HLSL` `HTML / CSS`
 
@@ -114,30 +84,26 @@ Only tools and languages that appear in the repositories above.
 
 **Interfaces** — `React 19` `Vite 8` `Streamlit` `PySide6` `Gradio`
 
-**Machine learning** — `PyTorch` `Hugging Face Transformers` `ConvNeXt` `EfficientNetV2` `Grad-CAM` `SHAP` `faster-whisper` `Kokoro ONNX` `PaddleOCR` `Tesseract` `TrOCR` `EasyOCR` `Gemini` `OpenAI-compatible APIs`
+**Perception & ML** — `PyTorch` `Hugging Face Transformers` `ConvNeXt` `EfficientNetV2` `Grad-CAM` `SHAP` `faster-whisper` `Kokoro ONNX` `PaddleOCR` `Tesseract` `TrOCR` `EasyOCR` `Gemini` `OpenAI-compatible APIs`
 
 **Simulation & tooling** — `Unity 6 HDRP` `Fabric (Minecraft 1.19.2)` `Chrome Manifest V3` `pytest` `Vitest` `GitHub Actions`
 
-## ACTIVITY
+<a name="signal"></a>
+## 04 / Signal
 
 <p align="center">
-  <img src="assets/activity.svg" width="1200" alt="Contribution calendar for the last twelve months, public contribution total, active days and primary-language distribution across the public repositories">
+  <img src="assets/activity.svg" width="1200" alt="A weekly signal trace of public contributions over the last twelve months, with totals for contributions, active days and project repositories.">
 </p>
 
 <sub>Regenerated weekly and on demand by [the activity workflow](.github/workflows/refresh-activity.yml). It reads the GitHub API directly; there are no third-party statistics cards, and the last committed asset remains in place if the API is unavailable.</sub>
 
-## CONTACT
+<a name="contact"></a>
+## 05 / Contact
 
 **GitHub** — [github.com/Owsper](https://github.com/Owsper)
 
-**Live project** — [Assistive Object Classifier on Hugging Face](https://huggingface.co/spaces/owsper/assistive-object-classifier)
-
-<sub>No public email, website or social profile is listed on this GitHub account. This profile is the canonical point of contact.</sub>
+<sub>The account lists no public email, website or social profile. GitHub is the only channel.</sub>
 
 ---
-
-<p align="center">
-  <img src="assets/footer.svg" width="1200" alt="OWSPER signature with the year the account was created">
-</p>
 
 <sub>Every repository and technology listed here is verifiable in the public repositories. Last reviewed November 2026.</sub>
