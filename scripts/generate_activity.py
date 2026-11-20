@@ -210,9 +210,9 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
         if index == 0:
             label = f"{week_start.strftime('%b').upper()} {week_start.year}"
         months.append(
-            f'<text x="{x:.1f}" y="330" font-size="21" letter-spacing="1.4" fill="#8a857c">{label}</text>'
+            f'<text x="{x:.1f}" y="332" font-size="20" letter-spacing="1.4" fill="#9a958b">{label}</text>'
         )
-    months.append(f'<text x="{right}" y="330" text-anchor="end" font-size="21" letter-spacing="1.4" fill="#8a857c">TODAY</text>')
+    months.append(f'<text x="{right}" y="332" text-anchor="end" font-size="20" letter-spacing="1.4" fill="#9a958b">TODAY</text>')
 
     grid = "".join(
         f'<line x1="{left}" y1="{y}" x2="{right}" y2="{y}" stroke="#1d1c1a" stroke-width="1"/>'
@@ -223,6 +223,12 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="activityTitle activityDesc">
   <title id="activityTitle">OWSPER — public GitHub signal</title>
   <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} project repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a weekly signal trace.</desc>
+  <defs>
+    <linearGradient id="signalFill" x1="0" y1="238" x2="0" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f2efe8" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#f2efe8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
   <rect width="1200" height="360" fill="#070707"/>
   <rect x="0.5" y="0.5" width="1199" height="359" fill="none" stroke="#232323"/>
 
@@ -246,15 +252,15 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
   </g>
 
   {grid}
-  <polyline points="{' '.join(points)}" fill="none" stroke="#f2efe8" stroke-width="1.2" opacity="0.32"/>
+  <polygon points="56,300 {' '.join(points)} 1144,300" fill="url(#signalFill)"/>
+  <polyline points="{' '.join(points)}" fill="none" stroke="#f2efe8" stroke-width="1.4" opacity="0.55"/>
   {''.join(bars)}
   {''.join(dots)}
   <line x1="{left}" y1="{base_y}" x2="{right}" y2="{base_y}" stroke="#35322d" stroke-width="1"/>
   {''.join(months)}
 
-  <g font-family="{MONO}" font-size="10" letter-spacing="1.6" fill="#8a857c">
-    <text x="56" y="352">GENERATED FROM PUBLIC GITHUB DATA. NO THIRD-PARTY STATISTICS SERVICES.</text>
-    <text x="1144" y="352" text-anchor="end">OWSPER</text>
+  <g font-family="{MONO}" font-size="10" letter-spacing="1.6" fill="#6f6b64">
+    <text x="1144" y="354" text-anchor="end">OWSPER</text>
   </g>
 </svg>
 '''
