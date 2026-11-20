@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="activityTitle activityDesc">
   <title id="activityTitle">OWSPER — public GitHub signal</title>
-  <desc id="activityDesc">1,294 public contributions on 157 active days across 11 public repositories, from 2025-11-16 to 2026-11-20, drawn as a weekly signal trace.</desc>
+  <desc id="activityDesc">1,294 public contributions on 157 active days across 10 project repositories, from 2025-11-16 to 2026-11-20, drawn as a weekly signal trace.</desc>
   <rect width="1200" height="360" fill="#070707"/>
   <rect x="0.5" y="0.5" width="1199" height="359" fill="none" stroke="#232323"/>
 
@@ -14,13 +14,13 @@
   <g font-family="Georgia, 'Times New Roman', serif" fill="#f2efe8">
     <text x="56" y="170" font-size="80" letter-spacing="-1">1,294</text>
     <text x="388" y="170" font-size="80" letter-spacing="-1" fill="#d4d0c6">157</text>
-    <text x="700" y="170" font-size="80" letter-spacing="-1" fill="#d4d0c6">11</text>
+    <text x="700" y="170" font-size="80" letter-spacing="-1" fill="#d4d0c6">10</text>
   </g>
 
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace" font-size="12" letter-spacing="2.2" fill="#9a958b">
     <text x="56" y="198">PUBLIC CONTRIBUTIONS</text>
     <text x="388" y="198">ACTIVE DAYS</text>
-    <text x="700" y="198">PUBLIC REPOSITORIES</text>
+    <text x="700" y="198">PROJECT REPOSITORIES</text>
   </g>
 
   <line x1="56" y1="238" x2="1144" y2="238" stroke="#1d1c1a" stroke-width="1"/><line x1="56" y1="258" x2="1144" y2="258" stroke="#1d1c1a" stroke-width="1"/><line x1="56" y1="279" x2="1144" y2="279" stroke="#1d1c1a" stroke-width="1"/>
