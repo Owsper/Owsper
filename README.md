@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.svg" width="1200" alt="Editorial monochrome plate. The word OWSPER at upper left, the line “Built to be understood” set in a serif, and a large machined instrument study with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.">
+  <img src="assets/hero.svg" width="1200" alt="Editorial monochrome plate. The word OWSPER set large at left above a small systems label, and a large machined instrument study at right with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.">
 </p>
 
 <p align="center">
@@ -88,7 +88,7 @@ Tools that appear in the repositories above. An inventory, not a proficiency sca
 ## 04 Signal
 
 <p align="center">
-  <img src="assets/activity.svg" width="1200" alt="A weekly signal trace of public contributions over the last twelve months, with totals for contributions, active days and project repositories.">
+  <img src="assets/activity.svg" width="1200" alt="A monthly signal trace of public contributions in 2026, with totals for contributions, active days and project repositories.">
 </p>
 
 <sub>Regenerated weekly and on demand by [the activity workflow](.github/workflows/refresh-activity.yml). It reads the GitHub API directly; there are no third-party statistics cards, and the last committed asset remains in place if the API is unavailable.</sub>
