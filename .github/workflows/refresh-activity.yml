@@ -37,7 +37,7 @@ jobs:
           tree = ET.parse("assets/activity.svg")
           root = tree.getroot()
           assert root.tag.endswith("svg"), root.tag
-          assert root.get("viewBox") == "0 0 1200 410", root.get("viewBox")
+          assert root.get("viewBox") == "0 0 1200 360", root.get("viewBox")
           assert root.find("{http://www.w3.org/2000/svg}title") is not None
           print("assets/activity.svg is well-formed")
           PY
