@@ -158,6 +158,40 @@ def weekly_series(contributions: dict[str, int]) -> tuple[list[tuple[date, int]]
     return totals, first, last
 
 
+def monthly_series(contributions: dict[str, int]) -> list[tuple[date, int]]:
+    """Group daily counts by month, starting at the first active month."""
+    totals: dict[tuple[int, int], int] = {}
+    for day_text, count in contributions.items():
+        day = date.fromisoformat(day_text)
+        key = (day.year, day.month)
+        totals[key] = totals.get(key, 0) + count
+    keys = sorted(totals)
+    active = [key for key in keys if totals[key] > 0]
+    if active:
+        keys = [key for key in keys if key >= active[0]]
+    return [(date(year, month, 1), totals[(year, month)]) for year, month in keys]
+
+
+def curve_commands(points: list[tuple[float, float]], top_y: float, base_y: float) -> str:
+    """Catmull-Rom curve through the points, clamped to the chart area."""
+    if len(points) < 2:
+        return ""
+    commands: list[str] = []
+    for index in range(len(points) - 1):
+        p0 = points[max(index - 1, 0)]
+        p1 = points[index]
+        p2 = points[index + 1]
+        p3 = points[min(index + 2, len(points) - 1)]
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        c1 = (c1[0], min(base_y, max(top_y, c1[1])))
+        c2 = (c2[0], min(base_y, max(top_y, c2[1])))
+        commands.append(
+            f"C {c1[0]:.1f} {c1[1]:.1f} {c2[0]:.1f} {c2[1]:.1f} {p2[0]:.1f} {p2[1]:.1f}"
+        )
+    return " ".join(commands)
+
+
 def build_svg(contributions: dict[str, int], repos: list[dict], generated: date) -> str:
     total = sum(contributions.values())
     active_days = sum(1 for count in contributions.values() if count > 0)
@@ -166,66 +200,91 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
         for repo in repos
         if not repo.get("fork") and repo.get("name", "").lower() != USER.lower()
     ]
-    series, first, last = weekly_series(contributions)
+    week_totals, first, last = weekly_series(contributions)
+    monthly = monthly_series(contributions)
 
     left, right = 56, 1144
-    base_y, top_y = 300, 238
+    base_y, top_y = 302, 238
     span = right - left
-    peak = max((count for _, count in series), default=0) or 1
+    peak = max((count for _, count in monthly), default=0) or 1
+    step = span / max(len(monthly) - 1, 1)
 
-    points: list[str] = []
-    bars: list[str] = []
-    dots: list[str] = []
-    step = span / max(len(series) - 1, 1)
-    for index, (_, count) in enumerate(series):
-        x = left + index * step
-        height = round((base_y - top_y) * math.sqrt(count / peak)) if count else 0
-        if height <= 0:
-            color = "#242320"
-            height = 1
-        elif count >= peak * 0.66:
-            color = "#c9c5bc"
-        elif count >= peak * 0.33:
-            color = "#6f6b64"
-        else:
-            color = "#3a3733"
-        bars.append(
-            f'<line x1="{x:.1f}" y1="{base_y}" x2="{x:.1f}" y2="{base_y - height}" '
-            f'stroke="{color}" stroke-width="2.5"/>'
-        )
-        points.append(f"{x:.1f},{base_y - height}")
-        if count >= peak * 0.8:
-            dots.append(f'<circle cx="{x:.1f}" cy="{base_y - height}" r="2" fill="#f2efe8"/>')
+    coords = [
+        (left + index * step, base_y - (base_y - top_y) * count / peak)
+        for index, (_, count) in enumerate(monthly)
+    ]
+    curve = curve_commands(coords, top_y, base_y)
+    line_path = f"M {coords[0][0]:.1f} {coords[0][1]:.1f} {curve}"
+    area_path = (
+        f"M {coords[0][0]:.1f} {base_y} L {coords[0][0]:.1f} {coords[0][1]:.1f} "
+        f"{curve} L {coords[-1][0]:.1f} {base_y} Z"
+    )
 
-    months: list[str] = []
-    seen: set[int] = set()
-    for index in (0, len(series) // 4, len(series) // 2, (3 * len(series)) // 4):
-        week_start = series[min(index, len(series) - 1)][0]
-        key = week_start.year * 12 + week_start.month
-        if key in seen:
+    # Faint weekly detail behind the monthly silhouette.
+    week_peak = max((count for _, count in week_totals), default=0) or 1
+    chart_start = monthly[0][0]
+    total_days = max((last - chart_start).days, 1)
+    ticks: list[str] = []
+    for week_start, count in week_totals:
+        if count <= 0:
             continue
-        seen.add(key)
-        x = left + index * step
-        label = week_start.strftime("%b").upper()
-        if index == 0:
-            label = f"{week_start.strftime('%b').upper()} {week_start.year}"
-        months.append(
-            f'<text x="{x:.1f}" y="332" font-size="20" letter-spacing="1.4" fill="#9a958b">{label}</text>'
+        fraction = (week_start - chart_start).days / total_days
+        if not 0 <= fraction <= 1:
+            continue
+        x = left + fraction * span
+        height = 8 + 24 * math.sqrt(count / week_peak)
+        ticks.append(
+            f'<line x1="{x:.1f}" y1="{base_y}" x2="{x:.1f}" y2="{base_y - height:.1f}" '
+            f'stroke="#3a3733" stroke-width="1.2" opacity="0.65"/>'
         )
-    months.append(f'<text x="{right}" y="332" text-anchor="end" font-size="20" letter-spacing="1.4" fill="#9a958b">TODAY</text>')
+
+    dots = [
+        f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.4" fill="#f2efe8" stroke="#070707" stroke-width="1"/>'
+        for x, y in coords
+    ]
+
+    peak_index = max(range(len(monthly)), key=lambda index: monthly[index][1])
+    peak_x, peak_y = coords[peak_index]
+    peak_label = (
+        f'<circle cx="{peak_x:.1f}" cy="{peak_y:.1f}" r="7" fill="none" stroke="#9a958b" opacity="0.55"/>'
+    )
+
+    month_labels = "".join(
+        f'<text x="{left + index * step:.1f}" y="332" text-anchor="{"start" if index == 0 else "end" if index == len(monthly) - 1 else "middle"}" '
+        f'font-size="20" letter-spacing="1.4" fill="#9a958b">{month.strftime("%b").upper()}</text>'
+        for index, (month, _) in enumerate(monthly)
+    )
+
+    same_year = monthly[0][0].year == monthly[-1][0].year
+    if same_year:
+        heading = f"SIGNAL / {monthly[0][0].year}"
+        range_label = (
+            f"{monthly[0][0].strftime('%b').upper()} — {monthly[-1][0].strftime('%b').upper()} "
+            f"{monthly[-1][0].year} · PEAK {peak:,}"
+        )
+    else:
+        heading = f"SIGNAL / LAST {len(monthly)} MONTHS"
+        range_label = (
+            f"{monthly[0][0].strftime('%b').upper()} {monthly[0][0].year} — "
+            f"{monthly[-1][0].strftime('%b').upper()} {monthly[-1][0].year} · PEAK {peak:,}"
+        )
 
     grid = "".join(
         f'<line x1="{left}" y1="{y}" x2="{right}" y2="{y}" stroke="#1d1c1a" stroke-width="1"/>'
-        for y in (top_y, 258, 279)
+        for y in (top_y, 260, 281)
+    )
+    guides = "".join(
+        f'<line x1="{x:.1f}" y1="{top_y}" x2="{x:.1f}" y2="{base_y}" stroke="#1b1a18" stroke-width="1"/>'
+        for x, _ in coords
     )
 
     updated = generated.isoformat()
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="activityTitle activityDesc">
   <title id="activityTitle">OWSPER — public GitHub signal</title>
-  <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} project repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a weekly signal trace.</desc>
+  <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} project repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a monthly signal trace.</desc>
   <defs>
     <linearGradient id="signalFill" x1="0" y1="238" x2="0" y2="300" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f2efe8" stop-opacity="0.14"/>
+      <stop offset="0" stop-color="#f2efe8" stop-opacity="0.18"/>
       <stop offset="1" stop-color="#f2efe8" stop-opacity="0"/>
     </linearGradient>
   </defs>
@@ -233,7 +292,7 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
   <rect x="0.5" y="0.5" width="1199" height="359" fill="none" stroke="#232323"/>
 
   <g font-family="{MONO}">
-    <text x="56" y="48" font-size="13" letter-spacing="2.4" fill="#c9c5bc">SIGNAL / LAST 12 MONTHS</text>
+    <text x="56" y="48" font-size="13" letter-spacing="2.4" fill="#c9c5bc">{heading}</text>
     <text x="1144" y="48" text-anchor="end" font-size="11" letter-spacing="1.6" fill="#9a958b">UPDATED {updated} · GITHUB API</text>
     <line x1="330" y1="116" x2="330" y2="192" stroke="#242320" stroke-width="1"/>
     <line x1="642" y1="116" x2="642" y2="192" stroke="#242320" stroke-width="1"/>
@@ -251,15 +310,20 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
     <text x="700" y="198">PROJECT REPOSITORIES</text>
   </g>
 
-  {grid}
-  <polygon points="56,300 {' '.join(points)} 1144,300" fill="url(#signalFill)"/>
-  <polyline points="{' '.join(points)}" fill="none" stroke="#f2efe8" stroke-width="1.4" opacity="0.55"/>
-  {''.join(bars)}
-  {''.join(dots)}
-  <line x1="{left}" y1="{base_y}" x2="{right}" y2="{base_y}" stroke="#35322d" stroke-width="1"/>
-  {''.join(months)}
+  <text x="56" y="220" font-family="{MONO}" font-size="10" letter-spacing="2" fill="#8a857c">MONTHLY TOTALS</text>
+  <text x="1144" y="220" text-anchor="end" font-family="{MONO}" font-size="10" letter-spacing="2" fill="#8a857c">{range_label}</text>
 
-  <g font-family="{MONO}" font-size="10" letter-spacing="1.6" fill="#6f6b64">
+  {grid}
+  {guides}
+  {''.join(ticks)}
+  <path d="{area_path}" fill="url(#signalFill)"/>
+  <path d="{line_path}" fill="none" stroke="#f2efe8" stroke-width="2"/>
+  {''.join(dots)}
+  {peak_label}
+  <line x1="{left}" y1="{base_y}" x2="{right}" y2="{base_y}" stroke="#35322d" stroke-width="1"/>
+  {month_labels}
+
+  <g font-family="{MONO}" font-size="10" letter-spacing="1.6" fill="#8a857c">
     <text x="1144" y="354" text-anchor="end">OWSPER</text>
   </g>
 </svg>
