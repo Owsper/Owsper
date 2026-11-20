@@ -1,21 +1,20 @@
 <p align="center">
-  <img src="assets/hero.svg" width="1200" alt="Editorial monochrome plate. The word OWSPER at upper left, the headline “Between the code and the world” set in a serif, and a large machined instrument study with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.">
+  <img src="assets/hero.svg" width="1200" alt="Editorial monochrome plate. The word OWSPER at upper left, the line “Built to be understood” set in a serif, and a large machined instrument study with concentric metal rings, bolt heads, an optical aperture and a thin signal trace.">
 </p>
 
 <p align="center">
-  Local-first tools, simulation and machine perception — built with the reasoning left visible.
+  Local-first tools, simulation and machine perception.
 </p>
 
 <p align="center">
-  <sub><a href="#selected-systems">WORK</a> &nbsp;·&nbsp; <a href="#index">INDEX</a> &nbsp;·&nbsp; <a href="#bench">BENCH</a> &nbsp;·&nbsp; <a href="#signal">SIGNAL</a> &nbsp;·&nbsp; <a href="https://github.com/Owsper">GITHUB</a></sub>
+  <sub><a href="#01-selected-systems">WORK</a> &nbsp;·&nbsp; <a href="#02-index">INDEX</a> &nbsp;·&nbsp; <a href="#03-bench">BENCH</a> &nbsp;·&nbsp; <a href="#04-signal">SIGNAL</a> &nbsp;·&nbsp; <a href="https://github.com/Owsper">GITHUB</a></sub>
 </p>
 
 ---
 
 > **Direction.** Most of what is public here is software: local-first tools, simulation, machine perception. The layer I keep moving toward is underneath it — firmware, sensors, and code that has to answer to a physical system. That work is not public yet.
 
-<a name="selected-systems"></a>
-## 01 / Selected systems
+## 01 Selected systems
 
 Three projects, chosen for what they show about how I build: a product with operational weight, a tool with an evidence trail, and a simulation where the physics has to hold.
 
@@ -49,8 +48,7 @@ An in-progress Unity 6 HDRP prototype: a Bf 109 over sculpted terrain, rebuilt I
 
 <sub>Early prototype · [Repository](https://github.com/Owsper/WW2-Dogfight)</sub>
 
-<a name="index"></a>
-## 02 / Index
+## 02 Index
 
 Ten project repositories, plus this profile. Grouped by what they are; the featured three are above.
 
@@ -73,8 +71,7 @@ Ten project repositories, plus this profile. Grouped by what they are; the featu
 - **[Minom](https://github.com/Owsper/Minom)** — Fabric mod for Minecraft 1.19.2; the first shipped block is `minom:wet_sand`. <sub>`Java` · `Fabric`</sub>
 - **[Barthelomew](https://github.com/Owsper/Barthelomew)** — Manifest V3 browser extension that spawns a teddy bear on the current page. <sub>`JavaScript` · `MIT`</sub>
 
-<a name="bench"></a>
-## 03 / Bench
+## 03 Bench
 
 Tools that appear in the repositories above. An inventory, not a proficiency scale.
 
@@ -88,8 +85,7 @@ Tools that appear in the repositories above. An inventory, not a proficiency sca
 
 **Simulation & tooling** — `Unity 6 HDRP` `Fabric (Minecraft 1.19.2)` `Chrome Manifest V3` `pytest` `Vitest` `GitHub Actions`
 
-<a name="signal"></a>
-## 04 / Signal
+## 04 Signal
 
 <p align="center">
   <img src="assets/activity.svg" width="1200" alt="A weekly signal trace of public contributions over the last twelve months, with totals for contributions, active days and project repositories.">
@@ -97,8 +93,7 @@ Tools that appear in the repositories above. An inventory, not a proficiency sca
 
 <sub>Regenerated weekly and on demand by [the activity workflow](.github/workflows/refresh-activity.yml). It reads the GitHub API directly; there are no third-party statistics cards, and the last committed asset remains in place if the API is unavailable.</sub>
 
-<a name="contact"></a>
-## 05 / Contact
+## 05 Contact
 
 **GitHub** — [github.com/Owsper](https://github.com/Owsper)
 
