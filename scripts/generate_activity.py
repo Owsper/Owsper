@@ -161,7 +161,11 @@ def weekly_series(contributions: dict[str, int]) -> tuple[list[tuple[date, int]]
 def build_svg(contributions: dict[str, int], repos: list[dict], generated: date) -> str:
     total = sum(contributions.values())
     active_days = sum(1 for count in contributions.values() if count > 0)
-    public_repos = [repo for repo in repos if not repo.get("fork")]
+    public_repos = [
+        repo
+        for repo in repos
+        if not repo.get("fork") and repo.get("name", "").lower() != USER.lower()
+    ]
     series, first, last = weekly_series(contributions)
 
     left, right = 56, 1144
@@ -218,7 +222,7 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
     updated = generated.isoformat()
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="activityTitle activityDesc">
   <title id="activityTitle">OWSPER — public GitHub signal</title>
-  <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} public repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a weekly signal trace.</desc>
+  <desc id="activityDesc">{total:,} public contributions on {active_days} active days across {len(public_repos)} project repositories, from {first.isoformat()} to {last.isoformat()}, drawn as a weekly signal trace.</desc>
   <rect width="1200" height="360" fill="#070707"/>
   <rect x="0.5" y="0.5" width="1199" height="359" fill="none" stroke="#232323"/>
 
@@ -238,7 +242,7 @@ def build_svg(contributions: dict[str, int], repos: list[dict], generated: date)
   <g font-family="{MONO}" font-size="12" letter-spacing="2.2" fill="#9a958b">
     <text x="56" y="198">PUBLIC CONTRIBUTIONS</text>
     <text x="388" y="198">ACTIVE DAYS</text>
-    <text x="700" y="198">PUBLIC REPOSITORIES</text>
+    <text x="700" y="198">PROJECT REPOSITORIES</text>
   </g>
 
   {grid}
